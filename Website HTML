@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VXJediXV — WoW Addons</title>
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --font-display: 'Orbitron', 'Rajdhani', sans-serif;
+      --font-body:    'Rajdhani', sans-serif;
+
+```
+  --bg:         #08060f;
+  --surface:    #100d1c;
+  --border:     #2a1f4a;
+  --border2:    #3d2b6b;
+
+  --violet:     #7c3aed;
+  --violet-lt:  #a855f7;
+  --violet-dim: #3b1d6b;
+  --magenta:    #e11d8a;
+  --magenta-lt: #f472b6;
+  --magenta-dim:#6b1040;
+
+  --text:  #f0eeff;
+  --muted: #6b5fa0;
+
+  --glow-v: rgba(124,58,237,0.55);
+  --glow-m: rgba(225,29,138,0.55);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.6;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+#waveCanvas, #trailCanvas, #burstCanvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+}
+#waveCanvas  { z-index: 0; opacity: 0.6; }
+#trailCanvas { z-index: 9999; }
+#burstCanvas { z-index: 9998; }
+
+nav, section, .stats, footer, .divider { position: relative; z-index: 1; }
+
+/* NAV */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 3rem;
+  background: rgba(8,6,15,0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  background: linear-gradient(90deg, var(--violet-lt), var(--magenta-lt));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.nav-links { display: flex; gap: 2.5rem; list-style: none; }
+.nav-links a {
+  color: var(--muted);
+  text-decoration: none;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--violet-lt); }
+
+/* BUTTONS */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.7rem 1.6rem;
+  border-radius: 3px;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: none;
+  transition: all 0.2s;
+  border: none;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--violet), var(--magenta));
+  color: #fff;
+  box-shadow: 0 0 20px var(--glow-v), 0 0 40px rgba(225,29,138,0.15);
+}
+.btn-primary:hover {
+  box-shadow: 0 0 35px var(--glow-v), 0 0 60px var(--glow-m);
+  transform: translateY(-2px);
+  filter: brightness(1.15);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border2);
+}
+.btn-ghost:hover { color: var(--violet-lt); border-color: var(--violet-lt); box-shadow: 0 0 15px rgba(124,58,237,0.25); }
+
+/* HERO */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 8rem 3rem 5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-eyebrow {
+  font-family: var(--font-display);
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+  background: linear-gradient(90deg, var(--violet-lt), var(--magenta-lt));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 1.75rem;
+  opacity: 0;
+  animation: fadeUp 0.7s ease forwards 0.1s;
+}
+
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 6.5vw, 5.5rem);
+  font-weight: 900;
+  line-height: 1.06;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  max-width: 16ch;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.2s;
+}
+.hero h1 em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--violet-lt), var(--magenta));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 0 22px var(--glow-m));
+}
+
+.hero-sub {
+  margin-top: 2rem;
+  font-size: 1rem;
+  color: var(--muted);
+  max-width: 44ch;
+  line-height: 1.7;
+  font-weight: 400;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.35s;
+}
+
+.hero-actions {
+  margin-top: 3rem;
+  display: flex;
+  gap: 1rem;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.5s;
+}
+
+/* STATS */
+.stats {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 2rem 3rem;
+  display: flex;
+  gap: 4rem;
+  background: rgba(16,13,28,0.65);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.65s;
+}
+.stat-num {
+  font-family: var(--font-display);
+  font-size: 2.1rem;
+  font-weight: 700;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--violet-lt), var(--magenta-lt));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.stat-label {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-weight: 500;
+  color: var(--muted);
+  margin-top: 0.3rem;
+}
+
+/* SECTIONS */
+section { padding: 6rem 3rem; }
+
+.section-eyebrow {
+  font-family: var(--font-display);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--magenta);
+  margin-bottom: 1rem;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3.5vw, 2.8rem);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
+  max-width: 22ch;
+}
+
+/* ADDON GRID */
+.addons-grid {
+  margin-top: 3.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+.addon-card {
+  background: var(--surface);
+  padding: 2rem 2.25rem;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.25s;
+}
+.addon-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(124,58,237,0.05), rgba(225,29,138,0.05));
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.addon-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--violet), var(--magenta));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.35s ease;
+}
+.addon-card:hover { background: #13102a; }
+.addon-card:hover::before { opacity: 1; }
+.addon-card:hover::after  { transform: scaleX(1); }
+
+.addon-tag {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 700;
+  padding: 0.22rem 0.6rem;
+  border-radius: 2px;
+  margin-bottom: 1.25rem;
+}
+.tag-combat { background: rgba(225,29,138,0.18); color: var(--magenta-lt); border: 1px solid rgba(225,29,138,0.3); }
+.tag-ui     { background: rgba(124,58,237,0.18); color: var(--violet-lt);  border: 1px solid rgba(124,58,237,0.3); }
+.tag-util   { background: rgba(168,85,247,0.15); color: #c084fc;           border: 1px solid rgba(168,85,247,0.25); }
+.tag-raid   { background: rgba(244,114,182,0.15); color: #f9a8d4;          border: 1px solid rgba(244,114,182,0.25); }
+
+.addon-name {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.6rem;
+}
+.addon-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.65; margin-bottom: 1.5rem; }
+
+.addon-features { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.5rem; }
+.feature-pill {
+  font-family: var(--font-display);
+  font-size: 0.55rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--border2);
+  border-radius: 2px;
+  color: var(--muted);
+}
+
+.addon-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border);
+}
+.addon-version { font-family: var(--font-display); font-size: 0.6rem; color: var(--muted); letter-spacing: 0.07em; }
+.addon-dl {
+  display: flex; align-items: center; gap: 0.4rem;
+  font-family: var(--font-display);
+  font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700;
+  background: linear-gradient(90deg, var(--violet-lt), var(--magenta-lt));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  text-decoration: none; transition: filter 0.2s;
+}
+.addon-dl:hover { filter: brightness(1.3); }
+
+/* FEATURED */
+.featured {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+  box-shadow: 0 0 60px rgba(124,58,237,0.1), 0 0 40px rgba(225,29,138,0.07);
+}
+.featured-content { padding: 3.5rem; border-right: 1px solid var(--border); }
+.featured-badge {
+  font-family: var(--font-display);
+  font-size: 0.55rem; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 700;
+  color: var(--magenta-lt);
+  border: 1px solid var(--magenta-dim);
+  display: inline-block; padding: 0.22rem 0.6rem; border-radius: 2px; margin-bottom: 1.5rem;
+}
+.featured h3 {
+  font-family: var(--font-display);
+  font-size: 2.3rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.06em; line-height: 1.1; margin-bottom: 1rem;
+  background: linear-gradient(135deg, var(--text), var(--violet-lt));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.featured p { color: var(--muted); font-size: 0.9rem; line-height: 1.75; margin-bottom: 1.25rem; }
+
+.featured-stats { padding: 3.5rem; display: flex; flex-direction: column; justify-content: center; gap: 2rem; }
+.fstat { display: flex; align-items: center; gap: 1.25rem; }
+.fstat-bar-wrap { flex: 1; height: 2px; background: var(--border); border-radius: 1px; overflow: hidden; }
+.fstat-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--violet), var(--magenta));
+  border-radius: 1px;
+  box-shadow: 0 0 8px var(--glow-v);
+  animation: barGrow 1.2s ease forwards;
+  transform-origin: left;
+}
+@keyframes barGrow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.fstat-label { font-family: var(--font-display); font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 600; color: var(--muted); width: 9ch; }
+.fstat-val   { font-family: var(--font-display); font-size: 0.75rem; font-weight: 700; color: var(--violet-lt); width: 4ch; text-align: right; }
+
+/* INSTALL */
+.install-section { background: var(--surface); border: 1px solid var(--border); padding: 3rem 3.5rem; }
+.install-steps { display: grid; grid-template-columns: repeat(3,1fr); gap: 2rem; margin-top: 2.5rem; }
+.step-num { font-family: var(--font-display); font-size: 3rem; font-weight: 900; color: var(--border2); line-height: 1; margin-bottom: 1rem; }
+.step-title { font-family: var(--font-display); font-size: 0.9rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
+.step-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.65; }
+code {
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  background: rgba(124,58,237,0.12);
+  border: 1px solid rgba(124,58,237,0.25);
+  padding: 0.1rem 0.4rem;
+  border-radius: 2px;
+  color: var(--violet-lt);
+}
+
+/* DONATE */
+.donate-section {
+  background: var(--surface); border: 1px solid var(--border2); overflow: hidden;
+  box-shadow: 0 0 60px rgba(225,29,138,0.07);
+}
+.donate-inner { display: grid; grid-template-columns: 1fr 1fr; }
+.donate-left { padding: 3.5rem; border-right: 1px solid var(--border); }
+.donate-left h3 { font-family: var(--font-display); font-size: 1.9rem; font-weight: 900; text-transform: uppercase; letter-spacing: 0.04em; line-height: 1.15; margin-bottom: 1rem; }
+.donate-left h3 em {
+  font-style: normal;
+  background: linear-gradient(90deg, var(--violet-lt), var(--magenta-lt));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.donate-left p { color: var(--muted); font-size: 0.875rem; line-height: 1.75; margin-bottom: 1.5rem; }
+
+.donate-perks { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; margin-bottom: 2rem; }
+.donate-perks li { display: flex; align-items: center; gap: 0.75rem; font-size: 0.82rem; color: var(--muted); font-family: var(--font-display); letter-spacing: 0.03em; }
+.perk-dot { width: 5px; height: 5px; border-radius: 50%; background: linear-gradient(135deg, var(--violet), var(--magenta)); flex-shrink: 0; box-shadow: 0 0 6px var(--glow-m); }
+
+.donate-right { padding: 3.5rem; display: flex; flex-direction: column; gap: 1rem; }
+.donate-right-title { font-family: var(--font-display); font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 600; color: var(--muted); margin-bottom: 0.5rem; }
+
+.amount-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.6rem; margin-bottom: 0.5rem; }
+.amount-btn {
+  background: transparent; border: 1px solid var(--border2); color: var(--muted);
+  font-family: var(--font-display); font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em;
+  padding: 0.7rem 0; border-radius: 3px; cursor: none; transition: all 0.18s; text-align: center;
+}
+.amount-btn:hover, .amount-btn.active {
+  border-color: var(--violet-lt); color: var(--violet-lt);
+  background: rgba(124,58,237,0.1); box-shadow: 0 0 12px rgba(124,58,237,0.2);
+}
+
+.donate-custom-wrap { position: relative; }
+.donate-custom-wrap .currency { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); font-family: var(--font-display); font-size: 0.85rem; color: var(--muted); }
+.donate-custom {
+  width: 100%; background: transparent; border: 1px solid var(--border); color: var(--text);
+  font-family: var(--font-display); font-size: 0.9rem;
+  padding: 0.75rem 1rem 0.75rem 2rem; border-radius: 3px; outline: none; transition: border-color 0.18s;
+}
+.donate-custom:focus { border-color: var(--violet); box-shadow: 0 0 10px rgba(124,58,237,0.2); }
+.donate-custom::placeholder { color: var(--muted); }
+
+.donate-platforms { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.5rem; }
+.platform-btn {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.9rem 1.25rem; border-radius: 3px; text-decoration: none;
+  font-family: var(--font-display); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700;
+  transition: all 0.18s; border: 1px solid transparent; cursor: none;
+}
+.platform-btn .plabel { display: flex; align-items: center; gap: 0.6rem; }
+.platform-btn .parrow { opacity: 0.5; transition: transform 0.18s, opacity 0.18s; }
+.platform-btn:hover .parrow { transform: translateX(4px); opacity: 1; }
+.btn-paypal  { background: rgba(0,112,186,0.1);  color: #60aadf; border-color: rgba(0,112,186,0.2);  }
+.btn-paypal:hover  { background: rgba(0,112,186,0.2);  box-shadow: 0 0 14px rgba(0,112,186,0.3); }
+.btn-kofi   { background: rgba(255,94,91,0.1);  color: #e07878; border-color: rgba(255,94,91,0.2);  }
+.btn-kofi:hover   { background: rgba(255,94,91,0.18); box-shadow: 0 0 14px rgba(255,94,91,0.3);  }
+.btn-patreon { background: rgba(255,66,77,0.08); color: #c07878; border-color: rgba(255,66,77,0.15); }
+.btn-patreon:hover { background: rgba(255,66,77,0.15); box-shadow: 0 0 14px rgba(255,66,77,0.25); }
+.donate-note { font-family: var(--font-display); font-size: 0.6rem; letter-spacing: 0.08em; color: var(--muted); text-align: center; margin-top: 0.25rem; }
+
+/* DIVIDER */
+.divider { border: none; border-top: 1px solid var(--border); margin: 0 3rem; position: relative; z-index: 1; }
+
+/* FOOTER */
+footer { border-top: 1px solid var(--border); padding: 2.5rem 3rem; display: flex; align-items: center; justify-content: space-between; background: rgba(8,6,15,0.8); }
+.footer-logo {
+  font-family: var(--font-display); font-size: 1rem; font-weight: 700; letter-spacing: 0.14em;
+  background: linear-gradient(90deg, var(--violet-lt), var(--magenta-lt));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.footer-note { font-family: var(--font-display); font-size: 0.6rem; letter-spacing: 0.08em; color: var(--muted); }
+.footer-links { display: flex; gap: 2rem; list-style: none; }
+.footer-links a {
+  font-family: var(--font-display); font-size: 0.6rem; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 600;
+  color: var(--muted); text-decoration: none; transition: color 0.2s;
+}
+.footer-links a:hover { color: var(--violet-lt); }
+
+/* ANIMATIONS */
+@keyframes fadeUp { from { opacity:0; transform:translateY(20px); } to { opacity:1; transform:none; } }
+.reveal { opacity:0; transform:translateY(22px); transition: opacity 0.65s ease, transform 0.65s ease; }
+.reveal.visible { opacity:1; transform:none; }
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  nav { padding: 1rem 1.5rem; }
+  .nav-links { display: none; }
+  .hero { padding: 7rem 1.5rem 3rem; }
+  .stats { padding: 1.5rem; gap: 2rem; flex-wrap: wrap; }
+  section { padding: 4rem 1.5rem; }
+  .featured { grid-template-columns: 1fr; }
+  .featured-content { border-right: none; border-bottom: 1px solid var(--border); }
+  .install-steps { grid-template-columns: 1fr; }
+  .donate-inner { grid-template-columns: 1fr; }
+  .donate-left { border-right: none; border-bottom: 1px solid var(--border); padding: 2rem 1.5rem; }
+  .donate-right { padding: 2rem 1.5rem; }
+  footer { flex-direction: column; gap: 1.5rem; text-align: center; }
+  .divider { margin: 0 1.5rem; }
+  body { cursor: auto; }
+}
+```
+
+  </style>
+</head>
+<body>
+
+<canvas id="waveCanvas"></canvas>
+<canvas id="trailCanvas"></canvas>
+<canvas id="burstCanvas"></canvas>
+
+<!-- NAV -->
+
+<nav>
+  <a class="nav-logo" href="#">VXJediXV</a>
+  <ul class="nav-links">
+    <li><a href="#addons">Addons</a></li>
+    <li><a href="#featured">Featured</a></li>
+    <li><a href="#install">Install</a></li>
+    <li><a href="#donate">Donate</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#addons" class="btn btn-primary">Browse Addons</a>
+</nav>
+
+<!-- HERO -->
+
+<section class="hero">
+  <p class="hero-eyebrow">VXJediXV · World of Warcraft · Custom Addons</p>
+  <h1>Built for the <em>serious</em> raider.</h1>
+  <p class="hero-sub">Precision-crafted addons that strip away the noise. Every frame matters, every millisecond counts.</p>
+  <div class="hero-actions">
+    <a href="#addons" class="btn btn-primary">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v7M2.5 5l3.5 3.5L9.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M1.5 11h9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Download All
+    </a>
+    <a href="#featured" class="btn btn-ghost">View Featured</a>
+  </div>
+</section>
+
+<!-- STATS -->
+
+<div class="stats">
+  <div class="stat-item"><div class="stat-num">12</div><div class="stat-label">Addons</div></div>
+  <div class="stat-item"><div class="stat-num">47k</div><div class="stat-label">Downloads</div></div>
+  <div class="stat-item"><div class="stat-num">11.1</div><div class="stat-label">WoW Version</div></div>
+  <div class="stat-item"><div class="stat-num">~0ms</div><div class="stat-label">Avg Overhead</div></div>
+</div>
+
+<hr class="divider" />
+
+<!-- ADDONS -->
+
+<section id="addons">
+  <p class="section-eyebrow reveal">All Addons</p>
+  <h2 class="section-title reveal">Every addon. No bloat.</h2>
+  <div class="addons-grid reveal">
+
+```
+<div class="addon-card">
+  <span class="addon-tag tag-combat">Combat</span>
+  <h3 class="addon-name">ClearCast</h3>
+  <p class="addon-desc">Minimal cooldown tracker. Shows only what you need — active procs, trinkets, and major abilities — with zero clutter.</p>
+  <div class="addon-features"><span class="feature-pill">Proc Tracking</span><span class="feature-pill">Custom Icons</span><span class="feature-pill">WeakAuras-free</span></div>
+  <div class="addon-meta"><span class="addon-version">v2.4.1 · 11.1</span><a href="#" class="addon-dl">Download <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v6M2 5l3 3 3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+</div>
+
+<div class="addon-card">
+  <span class="addon-tag tag-raid">Raid</span>
+  <h3 class="addon-name">RaidFrame+</h3>
+  <p class="addon-desc">Ultra-clean raid frames with smart dispel highlighting, role indicators, and sub-10ms update latency.</p>
+  <div class="addon-features"><span class="feature-pill">Dispel Alerts</span><span class="feature-pill">Role Icons</span><span class="feature-pill">Tank / Healer Modes</span></div>
+  <div class="addon-meta"><span class="addon-version">v3.1.0 · 11.1</span><a href="#" class="addon-dl">Download <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v6M2 5l3 3 3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+</div>
+
+<div class="addon-card">
+  <span class="addon-tag tag-ui">UI</span>
+  <h3 class="addon-name">NullUI</h3>
+  <p class="addon-desc">A complete UI replacement that removes every default Blizzard element and replaces them with composable, minimal panels.</p>
+  <div class="addon-features"><span class="feature-pill">Full UI Replace</span><span class="feature-pill">Drag & Drop</span><span class="feature-pill">Profile Export</span></div>
+  <div class="addon-meta"><span class="addon-version">v1.9.3 · 11.1</span><a href="#" class="addon-dl">Download <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v6M2 5l3 3 3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+</div>
+
+<div class="addon-card">
+  <span class="addon-tag tag-util">Utility</span>
+  <h3 class="addon-name">LootLedger</h3>
+  <p class="addon-desc">Session-based loot tracking with automatic DKP logging, roll history export, and officer-ready summaries.</p>
+  <div class="addon-features"><span class="feature-pill">DKP Logging</span><span class="feature-pill">CSV Export</span><span class="feature-pill">Roll History</span></div>
+  <div class="addon-meta"><span class="addon-version">v1.2.0 · 11.1</span><a href="#" class="addon-dl">Download <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v6M2 5l3 3 3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+</div>
+
+<div class="addon-card">
+  <span class="addon-tag tag-combat">Combat</span>
+  <h3 class="addon-name">InterruptQ</h3>
+  <p class="addon-desc">Raid-wide interrupt queue and announcement system. Assigns casts to players and fires a /ra alert when missed.</p>
+  <div class="addon-features"><span class="feature-pill">Auto Assign</span><span class="feature-pill">Miss Alerts</span><span class="feature-pill">Configurable Casts</span></div>
+  <div class="addon-meta"><span class="addon-version">v2.0.5 · 11.1</span><a href="#" class="addon-dl">Download <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v6M2 5l3 3 3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+</div>
+
+<div class="addon-card">
+  <span class="addon-tag tag-ui">UI</span>
+  <h3 class="addon-name">ThreatMeter Slim</h3>
+  <p class="addon-desc">A feather-light threat bar. Single row, color-coded by role, collapses outside of combat automatically.</p>
+  <div class="addon-features"><span class="feature-pill">Auto-collapse</span><span class="feature-pill">Role Colors</span><span class="feature-pill">1kb footprint</span></div>
+  <div class="addon-meta"><span class="addon-version">v1.0.8 · 11.1</span><a href="#" class="addon-dl">Download <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v6M2 5l3 3 3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+</div>
+```
+
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- FEATURED -->
+
+<section id="featured">
+  <p class="section-eyebrow reveal">Featured Addon</p>
+  <h2 class="section-title reveal">The one that started it all.</h2>
+  <div class="featured reveal" style="margin-top:3rem">
+    <div class="featured-content">
+      <span class="featured-badge">Most Downloaded</span>
+      <h3>ClearCast</h3>
+      <p>Most trackers show you everything and let you figure it out. ClearCast shows you only what's relevant to your next GCD. Built for mythic prog, tuned over two years of Heroic and Mythic clears.</p>
+      <p>No configuration walls. Drop it in, and it reads your spec. Works out of the box for all 13 DPS specs with hand-tuned priority lists.</p>
+      <a href="#" class="btn btn-primary" style="margin-top:0.5rem">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v7M2.5 5l3.5 3.5L9.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M1.5 11h9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Download v2.4.1
+      </a>
+    </div>
+    <div class="featured-stats">
+      <div class="fstat"><span class="fstat-label">Perf</span><div class="fstat-bar-wrap"><div class="fstat-bar" style="width:97%"></div></div><span class="fstat-val">97</span></div>
+      <div class="fstat"><span class="fstat-label">Accuracy</span><div class="fstat-bar-wrap"><div class="fstat-bar" style="width:100%"></div></div><span class="fstat-val">100</span></div>
+      <div class="fstat"><span class="fstat-label">Compat</span><div class="fstat-bar-wrap"><div class="fstat-bar" style="width:88%"></div></div><span class="fstat-val">88</span></div>
+      <div class="fstat"><span class="fstat-label">Specs</span><div class="fstat-bar-wrap"><div class="fstat-bar" style="width:100%"></div></div><span class="fstat-val">13</span></div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- INSTALL -->
+
+<section id="install">
+  <p class="section-eyebrow reveal">Getting Started</p>
+  <h2 class="section-title reveal">Install in three steps.</h2>
+  <div class="install-section reveal" style="margin-top:3rem">
+    <div class="install-steps">
+      <div class="install-step"><div class="step-num">01</div><div class="step-title">Download the zip</div><div class="step-desc">Click any Download button above. Each addon is packaged as a standalone <code>.zip</code> — no dependencies, no bundlers.</div></div>
+      <div class="install-step"><div class="step-num">02</div><div class="step-title">Extract to AddOns</div><div class="step-desc">Unzip into your <code>WoW/_retail_/Interface/AddOns/</code> folder. Folder name must match the addon name exactly.</div></div>
+      <div class="install-step"><div class="step-num">03</div><div class="step-title">Enable in-game</div><div class="step-desc">At character select, click <code>AddOns</code> and enable it. Log in and you're done.</div></div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- DONATE -->
+
+<section id="donate">
+  <p class="section-eyebrow reveal">Support the Project</p>
+  <h2 class="section-title reveal">Keep the addons alive.</h2>
+  <div class="donate-section reveal" style="margin-top:3rem">
+    <div class="donate-inner">
+      <div class="donate-left">
+        <h3>All addons are <em>free,</em> forever.</h3>
+        <p>Every addon I build is free and open source. If they've saved you wipes, improved your parses, or just made the game feel better — a small contribution goes a long way toward keeping them updated through patches.</p>
+        <ul class="donate-perks">
+          <li><span class="perk-dot"></span>Faster patch updates after major WoW releases</li>
+          <li><span class="perk-dot"></span>New addon development prioritized by supporters</li>
+          <li><span class="perk-dot"></span>Your name in the addon credits (on request)</li>
+          <li><span class="perk-dot"></span>Early access to beta builds via Discord</li>
+        </ul>
+      </div>
+      <div class="donate-right">
+        <div class="donate-right-title">Choose an amount</div>
+        <div class="amount-grid">
+          <button class="amount-btn" onclick="setAmount(this,'3')">$3</button>
+          <button class="amount-btn active" onclick="setAmount(this,'5')">$5</button>
+          <button class="amount-btn" onclick="setAmount(this,'10')">$10</button>
+          <button class="amount-btn" onclick="setAmount(this,'15')">$15</button>
+          <button class="amount-btn" onclick="setAmount(this,'25')">$25</button>
+          <button class="amount-btn" onclick="setAmount(this,'50')">$50</button>
+        </div>
+        <div class="donate-custom-wrap">
+          <span class="currency">$</span>
+          <input class="donate-custom" id="customAmount" type="number" min="1" placeholder="Custom amount" value="5" />
+        </div>
+        <div class="donate-platforms">
+          <a href="#" class="platform-btn btn-paypal"><span class="plabel"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.59 3.025-2.566 6.082-8.558 6.082H9.824l-1.054 6.7h3.7c.457 0 .845-.332.917-.785l.038-.197.728-4.6.047-.254c.072-.453.46-.785.917-.785h.578c3.736 0 6.662-1.517 7.514-5.904.357-1.831.17-3.357-.987-4.43z"/></svg> Donate via PayPal</span><span class="parrow">→</span></a>
+          <a href="#" class="platform-btn btn-kofi"><span class="plabel"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916z"/></svg> Buy me a coffee (Ko-fi)</span><span class="parrow">→</span></a>
+          <a href="#" class="platform-btn btn-patreon"><span class="plabel"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M0 .48v23.04h4.22V.48zm15.385 0c-4.764 0-8.641 3.88-8.641 8.65 0 4.755 3.877 8.623 8.641 8.623 4.75 0 8.615-3.868 8.615-8.623C24 4.36 20.136.48 15.385.48z"/></svg> Support on Patreon</span><span class="parrow">→</span></a>
+        </div>
+        <p class="donate-note">100% optional · No paywalls, ever · Thank you ♥</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+
+<footer id="contact">
+  <span class="footer-logo">VXJediXV</span>
+  <ul class="footer-links">
+    <li><a href="#">GitHub</a></li>
+    <li><a href="#">Discord</a></li>
+    <li><a href="#">CurseForge</a></li>
+    <li><a href="#">Wago.io</a></li>
+  </ul>
+  <span class="footer-note">© 2026 VXJediXV · All addons are free & open source</span>
+</footer>
+
+<script>
+/* ════════════════════════════════
+   PULSE WAVE BACKGROUND
+════════════════════════════════ */
+(function(){
+  const c = document.getElementById('waveCanvas');
+  const x = c.getContext('2d');
+  function resize(){ c.width = innerWidth; c.height = innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+
+  const W = [
+    { col:'124,58,237',  spd:0.000008, amp:60,  fr:0.011, ph:0,   yR:0.28, al:0.38 },
+    { col:'225,29,138',  spd:0.000012, amp:45,  fr:0.015, ph:2.0, yR:0.48, al:0.32 },
+    { col:'255,255,255', spd:0.000006, amp:35,  fr:0.008, ph:4.1, yR:0.62, al:0.18 },
+    { col:'168,85,247',  spd:0.00001,  amp:50,  fr:0.013, ph:1.2, yR:0.38, al:0.22 },
+    { col:'244,114,182', spd:0.000014, amp:30,  fr:0.018, ph:3.3, yR:0.72, al:0.18 },
+    { col:'255,255,255', spd:0.000007, amp:28,  fr:0.01,  ph:5.0, yR:0.18, al:0.14 },
+    { col:'124,58,237',  spd:0.000016, amp:22,  fr:0.022, ph:0.8, yR:0.85, al:0.15 },
+    { col:'255,255,255', spd:0.000005, amp:22,  fr:0.007, ph:2.7, yR:0.54, al:0.11 },
+  ];
+
+  function drawW(w, t){
+    const H = c.height, WW = c.width, by = H * w.yR;
+    x.beginPath(); x.moveTo(0, H);
+    for(let i=0;i<=WW;i+=2){
+      const y = by + Math.sin(i*w.fr + t*w.spd + w.ph)*w.amp
+                   + Math.sin(i*w.fr*1.6 + t*w.spd*0.65 + w.ph+1)*(w.amp*0.38);
+      x.lineTo(i,y);
+    }
+    x.lineTo(WW,H); x.closePath();
+    const g = x.createLinearGradient(0,by-w.amp,0,by+w.amp*2.2);
+    g.addColorStop(0,   `rgba(${w.col},${w.al})`);
+    g.addColorStop(0.5, `rgba(${w.col},${w.al*0.5})`);
+    g.addColorStop(1,   `rgba(${w.col},0)`);
+    x.fillStyle = g; x.fill();
+  }
+
+  function loop(ts){ x.clearRect(0,0,c.width,c.height); W.forEach(w=>drawW(w,ts)); requestAnimationFrame(loop); }
+  requestAnimationFrame(loop);
+})();
+
+/* ════════════════════════════════
+   CURSOR TRAIL
+════════════════════════════════ */
+(function(){
+  const c = document.getElementById('trailCanvas');
+  const x = c.getContext('2d');
+  function resize(){ c.width = innerWidth; c.height = innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+
+  const N = 30; const trail = [];
+  let mx=-200, my=-200, cx=-200, cy=-200;
+  document.addEventListener('mousemove', e=>{ mx=e.clientX; my=e.clientY; });
+  function lerp(a,b,t){ return a+(b-a)*t; }
+
+  function tick(){
+    x.clearRect(0,0,c.width,c.height);
+    cx = lerp(cx,mx,0.16); cy = lerp(cy,my,0.16);
+    trail.unshift({x:cx,y:cy});
+    if(trail.length>N) trail.pop();
+
+    for(let i=0;i<trail.length;i++){
+      const r  = 1-i/trail.length;
+      const sz = r*5.5+0.4;
+      const al = r*0.82;
+      const t2 = i/trail.length;
+      const rr = Math.round(lerp(168,225,t2));
+      const gg = Math.round(lerp(85, 29, t2));
+      const bb = Math.round(lerp(247,138,t2));
+      x.beginPath();
+      x.arc(trail[i].x, trail[i].y, sz, 0, Math.PI*2);
+      x.fillStyle = `rgba(${rr},${gg},${bb},${al})`;
+      x.fill();
+    }
+    // cursor dot
+    x.beginPath(); x.arc(cx,cy,5.5,0,Math.PI*2);
+    const g = x.createRadialGradient(cx,cy,0,cx,cy,5.5);
+    g.addColorStop(0,'rgba(255,255,255,0.95)');
+    g.addColorStop(1,'rgba(168,85,247,0)');
+    x.fillStyle=g; x.fill();
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+
+/* ════════════════════════════════
+   CLICK BURST
+════════════════════════════════ */
+(function(){
+  const c = document.getElementById('burstCanvas');
+  const x = c.getContext('2d');
+  function resize(){ c.width=innerWidth; c.height=innerHeight; }
+  resize(); window.addEventListener('resize',resize);
+
+  const parts=[];
+  const COLS=['124,58,237','168,85,247','225,29,138','244,114,182','255,255,255','200,100,255'];
+
+  window.addEventListener('click', e=>{
+    const n=24;
+    for(let i=0;i<n;i++){
+      const a = (Math.PI*2/n)*i + (Math.random()-.5)*0.6;
+      const s = 2.5+Math.random()*5;
+      parts.push({
+        x:e.clientX, y:e.clientY,
+        vx:Math.cos(a)*s, vy:Math.sin(a)*s,
+        al:1, sz:2+Math.random()*3.5,
+        col:COLS[Math.floor(Math.random()*COLS.length)],
+        dec:0.028+Math.random()*0.022,
+        gv:0.07+Math.random()*0.07
+      });
+    }
+  });
+
+  function tick(){
+    x.clearRect(0,0,c.width,c.height);
+    for(let i=parts.length-1;i>=0;i--){
+      const p=parts[i];
+      p.x+=p.vx; p.y+=p.vy; p.vy+=p.gv; p.vx*=0.97; p.al-=p.dec;
+      if(p.al<=0){ parts.splice(i,1); continue; }
+      x.beginPath(); x.arc(p.x,p.y,p.sz*p.al,0,Math.PI*2);
+      x.shadowColor=`rgba(${p.col},0.9)`; x.shadowBlur=10;
+      x.fillStyle=`rgba(${p.col},${p.al})`; x.fill(); x.shadowBlur=0;
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+})();
+
+/* ════════════════════════════════
+   SCROLL REVEAL
+════════════════════════════════ */
+const reveals = document.querySelectorAll('.reveal');
+new IntersectionObserver((entries)=>{
+  entries.forEach((e,i)=>{ if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('visible'),i*80); } });
+},{threshold:0.1}).observe
+// fix: observe each element individually
+const io = new IntersectionObserver((entries)=>{
+  entries.forEach((e,i)=>{ if(e.isIntersecting){ setTimeout(()=>e.target.classList.add('visible'),i*80); io.unobserve(e.target); } });
+},{threshold:0.1});
+reveals.forEach(el=>io.observe(el));
+
+/* ════════════════════════════════
+   DONATE AMOUNT SELECTOR
+════════════════════════════════ */
+function setAmount(btn,val){
+  document.querySelectorAll('.amount-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('customAmount').value=val;
+}
+</script>
+
+</body>
+</html>

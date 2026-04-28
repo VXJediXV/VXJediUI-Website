@@ -1,0 +1,17 @@
+# Mac
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Zip files (built by GitHub Actions, never commit manually)
+*.zip
+
+# Lua editor files
+*.backup
+luac.out
+
+# VS Code / editor folders
+.vscode/
+.idea/

@@ -11,6 +11,13 @@
   <meta property="og:description" content="Precision-crafted World of Warcraft addons. Free, open source, built for serious raiders." />
   <meta property="og:type" content="website" />
   <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Orbitron:wght@400;500;700;900&display=swap" rel="stylesheet" />
+  <!-- Apply saved theme BEFORE paint to prevent flash -->
+  <script>
+    (function(){
+      var t = localStorage.getItem('vxjedi-theme');
+      if (t) document.documentElement.setAttribute('data-theme', t);
+    })();
+  </script>
   <style>
     /* ══════════════════════════════════
        THEME VARIABLES
@@ -53,25 +60,25 @@
 }
 
 [data-theme="light"] {
-  --bg:      #f5f3ff;
-  --surface: #ffffff;
-  --border:  #d4c8f5;
-  --border2: #b8a4e8;
-  --text:    #1a0a2e;
-  --muted:   #7c6faa;
-  --nav-bg:  rgba(245,243,255,0.9);
-  --stats-bg:rgba(255,255,255,0.8);
-  --card-bg: #ffffff;
-  --card-hover: #faf7ff;
-  --wave-opacity: 0.25;
-  --text-stroke: -1px -1px 0 rgba(0,0,0,0.18),
-                  1px -1px 0 rgba(0,0,0,0.18),
-                 -1px  1px 0 rgba(0,0,0,0.18),
-                  1px  1px 0 rgba(0,0,0,0.18);
-  --text-stroke-strong: -1px -1px 0 rgba(0,0,0,0.32),
-                         1px -1px 0 rgba(0,0,0,0.32),
-                        -1px  1px 0 rgba(0,0,0,0.32),
-                         1px  1px 0 rgba(0,0,0,0.32);
+  --bg:      #ede8ff;
+  --surface: #f8f5ff;
+  --border:  #c4b4ee;
+  --border2: #a890dc;
+  --text:    #0e0520;
+  --muted:   #5c4f8a;
+  --nav-bg:  rgba(237,232,255,0.92);
+  --stats-bg:rgba(248,245,255,0.9);
+  --card-bg: #f8f5ff;
+  --card-hover: #f0ebff;
+  --wave-opacity: 0.22;
+  --text-stroke: -1px -1px 0 rgba(0,0,0,0.22),
+                  1px -1px 0 rgba(0,0,0,0.22),
+                 -1px  1px 0 rgba(0,0,0,0.22),
+                  1px  1px 0 rgba(0,0,0,0.22);
+  --text-stroke-strong: -1px -1px 0 rgba(0,0,0,0.38),
+                         1px -1px 0 rgba(0,0,0,0.38),
+                        -1px  1px 0 rgba(0,0,0,0.38),
+                         1px  1px 0 rgba(0,0,0,0.38);
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -144,19 +151,20 @@ body {
    LATEST UPDATE BANNER
 ══════════════════════════════════ */
 #update-banner {
-  position: relative;
-  z-index: 99;
-  background: linear-gradient(90deg, rgba(124,58,237,0.15), rgba(225,29,138,0.12), rgba(124,58,237,0.15));
-  border-bottom: 1px solid rgba(168,85,247,0.3);
-  padding: 0.6rem 3rem;
+  position: fixed;
+  top: 62px;
+  left: 0; right: 0;
+  z-index: 150;
+  background: linear-gradient(90deg, rgba(124,58,237,0.18), rgba(225,29,138,0.14), rgba(124,58,237,0.18));
+  border-bottom: 1px solid rgba(168,85,247,0.35);
+  padding: 0.55rem 3rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  backdrop-filter: blur(8px);
-  margin-top: 62px;
+  backdrop-filter: blur(12px);
   animation: bannerIn 0.6s ease forwards 0.8s;
   opacity: 0;
-  transform: translateY(-6px);
+  transform: translateY(-4px);
 }
 @keyframes bannerIn { to { opacity: 1; transform: translateY(0); } }
 
@@ -206,6 +214,11 @@ body {
 }
 .banner-close:hover { color: var(--text); }
 #update-banner.hidden { display: none; }
+
+/* Responsive banner */
+@media(max-width:900px) {
+  #update-banner { top: 58px; padding: 0.5rem 1.5rem; flex-wrap: wrap; gap: 0.5rem; }
+}
 
 /* ══════════════════════════════════
    CANVASES
@@ -324,7 +337,7 @@ nav {
 /* HERO */
 .hero {
   min-height: 100vh; display: flex; flex-direction: column;
-  justify-content: center; padding: 10rem 3rem 5rem;
+  justify-content: center; padding: 7rem 3rem 5rem;
   position: relative; overflow: hidden;
 }
 .hero-eyebrow {
@@ -677,10 +690,11 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 3rem; display: fle
 
 /* Banner */
 [data-theme="light"] #update-banner {
-  background: linear-gradient(90deg, rgba(124,58,237,0.08), rgba(225,29,138,0.06), rgba(124,58,237,0.08));
-  border-bottom-color: rgba(124,58,237,0.2);
+  background: linear-gradient(90deg, rgba(124,58,237,0.12), rgba(225,29,138,0.09), rgba(124,58,237,0.12));
+  border-bottom-color: rgba(124,58,237,0.25);
 }
-[data-theme="light"] .banner-link { border-color: rgba(124,58,237,0.25); }
+[data-theme="light"] .banner-link { border-color: rgba(124,58,237,0.3); }
+[data-theme="light"] .banner-text { color: var(--text); }
 
 /* Stats */
 [data-theme="light"] .stats { background: var(--stats-bg); }
@@ -1351,11 +1365,6 @@ function toggleTheme() {
   html.setAttribute('data-theme', next);
   localStorage.setItem('vxjedi-theme', next);
 }
-// Restore saved theme
-(function(){
-  const saved = localStorage.getItem('vxjedi-theme');
-  if (saved) document.documentElement.setAttribute('data-theme', saved);
-})();
 
 /* ══════════════════════
    PAGE TRANSITION

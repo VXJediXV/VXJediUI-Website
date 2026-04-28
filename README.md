@@ -1,2 +1,2 @@
-# vxjedixv.com
+#VXJediUI - Website
 My personal website

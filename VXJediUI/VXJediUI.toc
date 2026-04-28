@@ -1,0 +1,10 @@
+## Interface: 110100
+## Title: VXJediUI
+## Author: VXJediXV
+## Version: 1.0.0
+## Notes: Complete ElvUI UI suite by VXJediXV
+## Dependencies: ElvUI
+## X-Curse-Project-ID: YOUR_PROJECT_ID_HERE
+
+Core.lua
+Installer.lua

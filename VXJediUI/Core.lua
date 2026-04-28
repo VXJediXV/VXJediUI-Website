@@ -1,0 +1,2 @@
+-- VXJediUI Core
+-- Author: VXJediXV

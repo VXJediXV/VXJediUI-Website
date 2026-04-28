@@ -1,2 +1,2 @@
-# VXJediUI
-My ElvUI setup
+# vxjedixv.com
+My personal website

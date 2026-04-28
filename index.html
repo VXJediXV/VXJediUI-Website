@@ -1170,7 +1170,7 @@ section, .stats { scroll-margin-top: 108px; }
       <div class="install-step">
         <div class="step-num">01</div>
         <div class="step-title">Install ElvUI first</div>
-        <div class="step-desc">VXJediUI requires <code>ElvUI</code> — download the latest version from <code>tukui.org</code> and install it before proceeding. VXJediUI won't work without it.</div>
+        <div class="step-desc">VXJediUI requires <code>ElvUI</code> — download the latest version from <code>tukui.org</code> and install it before proceeding. Always keep ElvUI up to date for full compatibility.</div>
       </div>
       <div class="install-step">
         <div class="step-num">02</div>
@@ -1206,25 +1206,18 @@ section, .stats { scroll-margin-top: 108px; }
         </ul>
       </div>
       <div class="donate-right">
-        <div class="donate-right-title">Choose an amount</div>
-        <div class="amount-grid">
-          <button class="amount-btn" onclick="setAmount(this,'3')">$3</button>
-          <button class="amount-btn active" onclick="setAmount(this,'5')">$5</button>
-          <button class="amount-btn" onclick="setAmount(this,'10')">$10</button>
-          <button class="amount-btn" onclick="setAmount(this,'15')">$15</button>
-          <button class="amount-btn" onclick="setAmount(this,'25')">$25</button>
-          <button class="amount-btn" onclick="setAmount(this,'50')">$50</button>
-        </div>
-        <div class="donate-custom-wrap">
-          <span class="currency">$</span>
-          <input class="donate-custom" id="customAmount" type="number" min="1" placeholder="Custom amount" value="5" />
-        </div>
+        <div class="donate-right-title">Support on Patreon</div>
+        <p class="addon-desc" style="margin-bottom:1.5rem">Patreon supporters get early access to beta builds, a say in upcoming features, and their name in the credits. Every tier helps keep VXJediUI free for everyone.</p>
         <div class="donate-platforms">
-          <a href="#" class="platform-btn btn-paypal"><span class="plabel"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a3.35 3.35 0 0 0-.607-.541c-.013.076-.026.175-.041.254-.59 3.025-2.566 6.082-8.558 6.082H9.824l-1.054 6.7h3.7c.457 0 .845-.332.917-.785l.038-.197.728-4.6.047-.254c.072-.453.46-.785.917-.785h.578c3.736 0 6.662-1.517 7.514-5.904.357-1.831.17-3.357-.987-4.43z"/></svg> Donate via PayPal</span><span class="parrow">→</span></a>
-          <a href="#" class="platform-btn btn-kofi"><span class="plabel"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M23.881 8.948c-.773-4.085-4.859-4.593-4.859-4.593H.723c-.604 0-.679.798-.679.798s-.082 7.324-.022 11.822c.164 2.424 2.586 2.672 2.586 2.672s8.267-.023 11.966-.049c2.438-.426 2.683-2.566 2.658-3.734 4.352.24 7.422-2.831 6.649-6.916z"/></svg> Buy me a coffee (Ko-fi)</span><span class="parrow">→</span></a>
-          <a href="#" class="platform-btn btn-patreon"><span class="plabel"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M0 .48v23.04h4.22V.48zm15.385 0c-4.764 0-8.641 3.88-8.641 8.65 0 4.755 3.877 8.623 8.641 8.623 4.75 0 8.615-3.868 8.615-8.623C24 4.36 20.136.48 15.385.48z"/></svg> Support on Patreon</span><span class="parrow">→</span></a>
+          <a href="#" class="platform-btn btn-patreon" style="justify-content:center;padding:1.1rem 1.25rem;">
+            <span class="plabel">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M0 .48v23.04h4.22V.48zm15.385 0c-4.764 0-8.641 3.88-8.641 8.65 0 4.755 3.877 8.623 8.641 8.623 4.75 0 8.615-3.868 8.615-8.623C24 4.36 20.136.48 15.385.48z"/></svg>
+              Support VXJediXV on Patreon
+            </span>
+            <span class="parrow">→</span>
+          </a>
         </div>
-        <p class="donate-note">100% optional · No paywalls, ever · Thank you ♥</p>
+        <p class="donate-note">100% optional · No paywalls, ever · VXJediUI is always free ♥</p>
       </div>
     </div>
   </div>
@@ -1277,7 +1270,6 @@ section, .stats { scroll-margin-top: 108px; }
     <li><a href="https://github.com/VXJediXV" target="_blank">GitHub</a></li>
     <li><a href="#">Discord</a></li>
     <li><a href="#">CurseForge</a></li>
-    <li><a href="#">Wago.io</a></li>
   </ul>
   <span class="footer-note">© 2026 VXJediXV · All addons are free & open source</span>
 </footer>
@@ -1485,14 +1477,7 @@ const io=new IntersectionObserver((entries)=>{
 },{threshold:0.08});
 document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
 
-/* ══════════════════════
-   DONATE AMOUNT
-══════════════════════ */
-function setAmount(btn,val){
-  document.querySelectorAll('.amount-btn').forEach(b=>b.classList.remove('active'));
-  btn.classList.add('active');
-  document.getElementById('customAmount').value=val;
-}
+
 </script>
 
 </body>

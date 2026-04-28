@@ -102,7 +102,11 @@ body {
   overflow-x: hidden;
   cursor: none;
   transition: background var(--transition-page), color var(--transition-page);
+  padding-top: 100px; /* nav ~62px + banner ~38px */
 }
+
+/* Hero overrides body padding — it handles its own top spacing */
+.hero { margin-top: -100px; min-height: 100vh; }
 
 /* ══════════════════════════════════
    PAGE TRANSITION OVERLAY
@@ -336,8 +340,8 @@ nav {
 
 /* HERO */
 .hero {
-  min-height: 100vh; display: flex; flex-direction: column;
-  justify-content: center; padding: 7rem 3rem 5rem;
+  display: flex; flex-direction: column;
+  justify-content: center; padding: 3rem 3rem 4rem;
   position: relative; overflow: hidden;
 }
 .hero-eyebrow {
@@ -793,17 +797,21 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 3rem; display: fle
 
 /* ══════════════════════════════════
    ANIMATIONS
+══════════════════════════════════ */
 @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:none} }
 .reveal { opacity:0; transform:translateY(22px); transition: opacity 0.65s ease, transform 0.65s ease; }
 .reveal.visible { opacity:1; transform:none; }
+
+/* Offset anchor scroll for fixed nav + fixed banner */
+section, .stats { scroll-margin-top: 108px; }
 
 /* RESPONSIVE */
 @media(max-width:900px) {
   nav { padding: 1rem 1.5rem; }
   .nav-links { display: none; }
-  .hero { padding: 7rem 1.5rem 3rem; }
+  .hero { padding: 6rem 1.5rem 3rem; }
   .stats { padding: 1.5rem; gap: 2rem; flex-wrap: wrap; }
-  section { padding: 4rem 1.5rem; }
+  section { padding: 4rem 1.5rem; scroll-margin-top: 100px; }
   .featured { grid-template-columns: 1fr; }
   .featured-content { border-right: none; border-bottom: 1px solid var(--border); }
   .install-steps { grid-template-columns: 1fr; }
@@ -836,7 +844,7 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 3rem; display: fle
   <div class="banner-left">
     <span class="banner-pulse"></span>
     <span class="banner-eyebrow">Latest Update</span>
-    <span class="banner-text"><strong>ClearCast v2.4.1</strong> — Patch 11.1 compatibility fix · Apr 22, 2026</span>
+    <span class="banner-text"><strong>VXJediUI v1.0.0</strong> — Initial release · ElvUI integration & first-run installer · Apr 28, 2026</span>
   </div>
   <div class="banner-right">
     <a href="#changelog" class="banner-link">View Changelog</a>
@@ -929,8 +937,7 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 3rem; display: fle
   </a>
 
   <ul class="nav-links">
-    <li><a href="#addons">Addons</a></li>
-    <li><a href="#featured">Featured</a></li>
+    <li><a href="#addons">VXJediUI</a></li>
     <li><a href="#changelog">Changelog</a></li>
     <li><a href="#install">Install</a></li>
     <li><a href="#donate">Donate</a></li>
@@ -946,32 +953,32 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 3rem; display: fle
       <span class="theme-icon moon">🌙</span>
       <span class="theme-icon sun">☀️</span>
     </button>
-    <a href="#addons" class="btn btn-primary">Browse Addons</a>
+    <a href="#addons" class="btn btn-primary">Download Now</a>
   </div>
 </nav>
 
 <!-- HERO -->
 
 <section class="hero">
-  <p class="hero-eyebrow">VXJediXV · World of Warcraft · Custom Addons</p>
-  <h1>Built for the <em>serious</em> raider.</h1>
-  <p class="hero-sub">Precision-crafted addons that strip away the noise. Every frame matters, every millisecond counts.</p>
+  <p class="hero-eyebrow">VXJediXV · World of Warcraft · ElvUI Suite</p>
+  <h1>Your UI.<br/><em>Perfected.</em></h1>
+  <p class="hero-sub">VXJediUI is a complete ElvUI suite built for serious raiders. One install, zero configuration. Built by a tank, for everyone.</p>
   <div class="hero-actions">
     <a href="#addons" class="btn btn-primary">
       <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v7M2.5 5l3.5 3.5L9.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M1.5 11h9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      Download All
+      Download VXJediUI
     </a>
-    <a href="#featured" class="btn btn-ghost">View Featured</a>
+    <a href="#changelog" class="btn btn-ghost">View Changelog</a>
   </div>
 </section>
 
 <!-- STATS -->
 
 <div class="stats">
-  <div class="stat-item"><div class="stat-num">1</div><div class="stat-label">Addon</div></div>
-  <div class="stat-item"><div class="stat-num">47k</div><div class="stat-label">Downloads</div></div>
-  <div class="stat-item"><div class="stat-num">11.1</div><div class="stat-label">WoW Version</div></div>
+  <div class="stat-item"><div class="stat-num">v1.0.0</div><div class="stat-label">Current Version</div></div>
+  <div class="stat-item"><div class="stat-num">✓</div><div class="stat-label">Latest WoW & ElvUI</div></div>
   <div class="stat-item"><div class="stat-num">ElvUI</div><div class="stat-label">Powered By</div></div>
+  <div class="stat-item"><div class="stat-num">~0min</div><div class="stat-label">Setup Time</div></div>
 </div>
 
 <hr class="divider" />
@@ -997,7 +1004,7 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 3rem; display: fle
       <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v6M2 5l3 3 3-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/><path d="M1 9h8" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
       47.2k downloads
     </div>
-    <span class="addon-version">v1.0.0 · WoW 11.1</span>
+    <span class="addon-version">v1.0.0 · Latest WoW & ElvUI</span>
   </div>
 </div>
 
@@ -1116,33 +1123,6 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 3rem; display: fle
 
 <hr class="divider" />
 
-<!-- FEATURED -->
-
-<section id="featured">
-  <p class="section-eyebrow reveal">Featured</p>
-  <h2 class="section-title reveal">Built different.</h2>
-  <div class="featured reveal" style="margin-top:3rem">
-    <div class="featured-content">
-      <span class="featured-badge">ElvUI Powered</span>
-      <h3>VXJediUI</h3>
-      <p>Most UI packs overwrite ElvUI and break on every patch. VXJediUI is an ElvUI plugin — it lives inside the system, inherits all of ElvUI's stability, and extends it with a complete visual overhaul and tank-focused layout.</p>
-      <p>The first-run installer detects your spec, sets your layout, and applies the full profile automatically. You log in, you play.</p>
-      <a href="#" class="btn btn-primary" style="margin-top:0.5rem">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v7M2.5 5l3.5 3.5L9.5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M1.5 11h9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        Download v1.0.0
-      </a>
-    </div>
-    <div class="featured-stats">
-      <div class="fstat"><span class="fstat-label">Performance</span><div class="fstat-bar-wrap"><div class="fstat-bar" style="width:98%"></div></div><span class="fstat-val">98</span></div>
-      <div class="fstat"><span class="fstat-label">Compat</span><div class="fstat-bar-wrap"><div class="fstat-bar" style="width:100%"></div></div><span class="fstat-val">100</span></div>
-      <div class="fstat"><span class="fstat-label">Setup Time</span><div class="fstat-bar-wrap"><div class="fstat-bar" style="width:100%"></div></div><span class="fstat-val">~0m</span></div>
-      <div class="fstat"><span class="fstat-label">Specs</span><div class="fstat-bar-wrap"><div class="fstat-bar" style="width:100%"></div></div><span class="fstat-val">All</span></div>
-    </div>
-  </div>
-</section>
-
-<hr class="divider" />
-
 <!-- CHANGELOG -->
 
 <section id="changelog">
@@ -1154,87 +1134,22 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 3rem; display: fle
 ```
 <div class="changelog-entry">
   <div class="cl-meta">
-    <span class="cl-version">v2.4.1</span>
-    <span class="cl-addon">ClearCast</span>
-    <span class="cl-date">Apr 22, 2026</span>
-    <span class="cl-badge fix">Fix</span>
-  </div>
-  <div class="cl-content">
-    <div class="cl-title">Patch 11.1 Compatibility</div>
-    <ul class="cl-notes">
-      <li>Fixed proc detection breaking on Evoker after 11.1 API changes</li>
-      <li>Corrected trinket cooldown read for crafted gear</li>
-      <li>Improved frame anchoring on ultrawide resolutions</li>
-    </ul>
-  </div>
-</div>
-
-<div class="changelog-entry">
-  <div class="cl-meta">
-    <span class="cl-version">v3.1.0</span>
-    <span class="cl-addon">RaidFrame+</span>
-    <span class="cl-date">Apr 10, 2026</span>
-    <span class="cl-badge feature">Feature</span>
-  </div>
-  <div class="cl-content">
-    <div class="cl-title">Tank Mode & Role Sorting</div>
-    <ul class="cl-notes">
-      <li>Added dedicated tank mode with aggro indicator border</li>
-      <li>Role-based sorting: tanks top, healers middle, DPS bottom</li>
-      <li>New compact 10-man layout preset</li>
-      <li>Fixed dispel glow persisting after buff fades</li>
-    </ul>
-  </div>
-</div>
-
-<div class="changelog-entry">
-  <div class="cl-meta">
-    <span class="cl-version">v2.4.0</span>
-    <span class="cl-addon">ClearCast</span>
-    <span class="cl-date">Mar 28, 2026</span>
-    <span class="cl-badge feature">Feature</span>
-  </div>
-  <div class="cl-content">
-    <div class="cl-title">Evoker & Augmentation Support</div>
-    <ul class="cl-notes">
-      <li>Full Augmentation Evoker priority list added</li>
-      <li>Essence cooldown tracking now handles all Evoker specs</li>
-      <li>Added configurable icon border glow color per proc</li>
-    </ul>
-  </div>
-</div>
-
-<div class="changelog-entry">
-  <div class="cl-meta">
-    <span class="cl-version">v1.2.0</span>
-    <span class="cl-addon">LootLedger</span>
-    <span class="cl-date">Mar 15, 2026</span>
+    <span class="cl-version">v1.0.0</span>
+    <span class="cl-addon">VXJediUI</span>
+    <span class="cl-date">Apr 28, 2026</span>
     <span class="cl-badge new">New</span>
   </div>
   <div class="cl-content">
     <div class="cl-title">Initial Release</div>
     <ul class="cl-notes">
-      <li>Session loot tracking with automatic officer log generation</li>
-      <li>DKP mode with configurable point values per boss</li>
-      <li>One-click CSV export for spreadsheet integration</li>
-      <li>Roll history stored per-session with timestamps</li>
-    </ul>
-  </div>
-</div>
-
-<div class="changelog-entry">
-  <div class="cl-meta">
-    <span class="cl-version">v2.0.5</span>
-    <span class="cl-addon">InterruptQ</span>
-    <span class="cl-date">Feb 27, 2026</span>
-    <span class="cl-badge fix">Fix</span>
-  </div>
-  <div class="cl-content">
-    <div class="cl-title">Queue Logic Overhaul</div>
-    <ul class="cl-notes">
-      <li>Rebuilt assignment logic to prevent duplicate queue entries</li>
-      <li>Fixed /ra announcement firing twice on some servers</li>
-      <li>Added 10-player dungeon mode with simplified 2-player queue</li>
+      <li>Full ElvUI plugin integration — hooks directly into ElvUI's plugin system with zero conflicts</li>
+      <li>First-run setup installer — guided in-game wizard on first login, auto-detects your spec and applies the full profile</li>
+      <li>Complete unitframe overhaul — clean, minimal frames with tank-focused threat and health indicators</li>
+      <li>Custom nameplate styling — compact, high-readability nameplates tuned for raid and mythic+</li>
+      <li>Actionbar layout — streamlined bar setup with role-aware defaults out of the box</li>
+      <li>Minimap, chat, and datatext panels all rebuilt with consistent styling</li>
+      <li>Profile export — share your exact setup with guildmates via a single import string</li>
+      <li>Compatible with WeakAuras, Details!, BigWigs, and all major raid addons</li>
     </ul>
   </div>
 </div>
@@ -1252,9 +1167,21 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 3rem; display: fle
   <h2 class="section-title reveal">Install in three steps.</h2>
   <div class="install-section reveal" style="margin-top:3rem">
     <div class="install-steps">
-      <div class="install-step"><div class="step-num">01</div><div class="step-title">Download the zip</div><div class="step-desc">Click any Download button above. Each addon is packaged as a standalone <code>.zip</code> — no dependencies, no bundlers.</div></div>
-      <div class="install-step"><div class="step-num">02</div><div class="step-title">Extract to AddOns</div><div class="step-desc">Unzip into your <code>WoW/_retail_/Interface/AddOns/</code> folder. Folder name must match the addon name exactly.</div></div>
-      <div class="install-step"><div class="step-num">03</div><div class="step-title">Enable in-game</div><div class="step-desc">At character select, click <code>AddOns</code> and enable it. Log in and you're done.</div></div>
+      <div class="install-step">
+        <div class="step-num">01</div>
+        <div class="step-title">Install ElvUI first</div>
+        <div class="step-desc">VXJediUI requires <code>ElvUI</code> — download the latest version from <code>tukui.org</code> and install it before proceeding. VXJediUI won't work without it.</div>
+      </div>
+      <div class="install-step">
+        <div class="step-num">02</div>
+        <div class="step-title">Download & extract VXJediUI</div>
+        <div class="step-desc">Download the <code>.zip</code> above and unzip it into <code>WoW/_retail_/Interface/AddOns/</code>. Make sure the folder is named <code>VXJediUI</code> exactly.</div>
+      </div>
+      <div class="install-step">
+        <div class="step-num">03</div>
+        <div class="step-title">Run the installer in-game</div>
+        <div class="step-desc">Log in on any character. The setup wizard launches automatically on first login — pick your role, choose a layout, and hit Apply. Done.</div>
+      </div>
     </div>
   </div>
 </section>
@@ -1265,16 +1192,16 @@ footer { border-top: 1px solid var(--border); padding: 2.5rem 3rem; display: fle
 
 <section id="donate">
   <p class="section-eyebrow reveal">Support the Project</p>
-  <h2 class="section-title reveal">Keep the addons alive.</h2>
+  <h2 class="section-title reveal">Keep VXJediUI alive.</h2>
   <div class="donate-section reveal" style="margin-top:3rem">
     <div class="donate-inner">
       <div class="donate-left">
-        <h3>All addons are <em>free,</em> forever.</h3>
-        <p>Every addon I build is free and open source. If they've saved you wipes, improved your parses, or just made the game feel better — a small contribution goes a long way toward keeping them updated through patches.</p>
+        <h3>VXJediUI is <em>free,</em> forever.</h3>
+        <p>VXJediUI is free and open source. If it's improved your raiding experience, saved you setup time, or just made WoW look the way it should — a small contribution helps keep it updated through every patch and expansion.</p>
         <ul class="donate-perks">
-          <li><span class="perk-dot"></span>Faster patch updates after major WoW releases</li>
-          <li><span class="perk-dot"></span>New addon development prioritized by supporters</li>
-          <li><span class="perk-dot"></span>Your name in the addon credits (on request)</li>
+          <li><span class="perk-dot"></span>Faster updates after major WoW and ElvUI releases</li>
+          <li><span class="perk-dot"></span>New layout presets and features prioritized by supporters</li>
+          <li><span class="perk-dot"></span>Your name in the VXJediUI credits (on request)</li>
           <li><span class="perk-dot"></span>Early access to beta builds via Discord</li>
         </ul>
       </div>

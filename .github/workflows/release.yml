@@ -38,15 +38,16 @@ jobs:
 
       # Upload the zip to CurseForge
       - name: Upload to CurseForge
-        uses: itselectriq/curseforge-upload@v2
+        uses: itsmeow/curseforge-upload@v3
         with:
-          api-token: ${{ secrets.CURSEFORGE_API_TOKEN }}
-          project-id: ${{ secrets.CURSEFORGE_PROJECT_ID }}
-          file-path: VXJediUI.zip
+          token: ${{ secrets.CURSEFORGE_API_TOKEN }}
+          project_id: ${{ secrets.CURSEFORGE_PROJECT_ID }}
+          file_path: VXJediUI.zip
           # ⚠️  Update this to the current WoW version ID from:
           # https://wow.curseforge.com/api/game/versions
-          game-version-id: '12.0.5'
-          release-type: release
+          game_versions: '12.0.1'
+          game_endpoint: "wow"
+          release_type: release
           changelog: |
             VXJediUI ${{ steps.version.outputs.VERSION }}
             See the full changelog at: https://vxjedixv.com/#changelog

@@ -1,1 +1,127 @@
+name: Release VXJediUI
 
+# Fires when you push a version tag like v1.0.0, v1.1.0, etc.
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+
+  # ─────────────────────────────────────────
+  # JOB 1: Package & upload to CurseForge
+  # ─────────────────────────────────────────
+  release-curseforge:
+    name: Upload to CurseForge
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      # Strip the leading "v" from the tag (v1.0.0 → 1.0.0)
+      - name: Get version number
+        id: version
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
+
+      # Zip all three addon folders into one release zip
+      - name: Package addon zip
+        run: |
+          zip -r VXJediUI.zip \
+            VXJediUI/ \
+            VXJediEssentials/ \
+            VXJediMedia/ \
+            --exclude "*.git*" \
+            --exclude "*/.github/*" \
+            --exclude "*/node_modules/*" \
+            --exclude "*.DS_Store"
+
+      # Upload the zip to CurseForge
+      - name: Upload to CurseForge
+        uses: itselectriq/curseforge-upload@v2
+        with:
+          api-token: ${{ secrets.CURSEFORGE_API_TOKEN }}
+          project-id: ${{ secrets.CURSEFORGE_PROJECT_ID }}
+          file-path: VXJediUI.zip
+          # ⚠️  Update this to the current WoW version ID from:
+          # https://wow.curseforge.com/api/game/versions
+          game-version-id: '12.0.5'
+          release-type: release
+          changelog: |
+            VXJediUI ${{ steps.version.outputs.VERSION }}
+            See the full changelog at: https://vxjedixv.com/#changelog
+
+      # Create a GitHub Release with the zip attached
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: VXJediUI ${{ steps.version.outputs.VERSION }}
+          body: |
+            ## VXJediUI ${{ steps.version.outputs.VERSION }}
+
+            A complete ElvUI UI suite for World of Warcraft by VXJediXV.
+            Compatible with the latest WoW and ElvUI versions.
+
+            ### Included Addons
+            - **VXJediUI** — ElvUI installer & profiles
+            - **VXJediEssentials** — QoL features & utilities
+            - **VXJediMedia** — Custom fonts, textures & sounds
+
+            ### Install
+            1. Install [ElvUI](https://www.tukui.org/download.php?ui=elvui) first
+            2. Download `VXJediUI.zip` below
+            3. Extract all folders to `WoW/_retail_/Interface/AddOns/`
+            4. Log in — the setup wizard runs automatically
+
+            ### Links
+            - Website: https://vxjedixv.com
+          files: VXJediUI.zip
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ─────────────────────────────────────────
+  # JOB 2: Deploy website to GitHub Pages
+  # ─────────────────────────────────────────
+  deploy-site:
+    name: Deploy Website
+    runs-on: ubuntu-latest
+    needs: release-curseforge
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Get version number
+        id: version
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
+
+      # Inject the real download URL and version number into the site
+      - name: Inject release info into site
+        run: |
+          DOWNLOAD_URL="https://github.com/${{ github.repository }}/releases/download/${{ github.ref_name }}/VXJediUI.zip"
+          sed -i "s|DOWNLOAD_URL_PLACEHOLDER|${DOWNLOAD_URL}|g" docs/index.html
+          sed -i "s|v1\.0\.0|v${{ steps.version.outputs.VERSION }}|g" docs/index.html
+
+      - name: Setup GitHub Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload site to Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

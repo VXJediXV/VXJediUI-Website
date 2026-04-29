@@ -1,10 +1,48 @@
-## Interface: 110100
-## Title: VXJediUI
+## Interface: 120001, 120005, 120000
 ## Author: VXJediXV
+## X-Website: https://vxjedixv.com
 ## Version: 1.0.0
-## Notes: Complete ElvUI UI suite by VXJediXV
-## Dependencies: ElvUI
-## X-Curse-Project-ID: YOUR_PROJECT_ID_HERE
+## Title: |cffA855F7VXJediUI|r
+## Notes: Complete ElvUI UI suite by VXJediXV | vxjedixv.com
+## DefaultState: enabled
+## Category-enUS: |cffA855F7VXJediUI|r
+## IconTexture: Interface\AddOns\VXJediMedia\StatusBars\VXJedi.tga
+## SavedVariables: VXJediUIDB
+## X-BigWigs: 1.0.0
+## X-Details: 1.0.0
+## X-ElvUI: 1.0.0
+## X-Plater: 1.0.0
+## X-WarpDeplete: 1.0.0
+## X-BlizzardCooldownManager: 1.0.0
+## X-EditMode: 1.0.0
+## X-VXJediEssentials: 1.0.0
+## X-AyijeCDM: 1.0.0
+## X-BuffReminders: 1.0.0
+## RequiredDeps: ElvUI
+## OptionalDeps: VXJediMedia
 
-Core.lua
-Installer.lua
+## Base VXJediUI installer addon files
+VXJediUI.lua
+
+## Addon data (both 1080p and 1440p in each file)
+AddonData\BigWigs.lua
+AddonData\Details.lua
+AddonData\ElvUI.lua
+AddonData\Plater.lua
+AddonData\BlizzardCooldownManager.lua
+AddonData\EditMode.lua
+AddonData\VXJediEssentials.lua
+AddonData\AyijeCDM.lua
+AddonData\BuffReminders.lua
+
+## Import functions
+AddonImports\ElvUI.lua
+AddonImports\Details.lua
+AddonImports\BigWigs.lua
+AddonImports\WarpDeplete.lua
+AddonImports\Plater.lua
+AddonImports\BlizzardCooldownManager.lua
+AddonImports\EditMode.lua
+AddonImports\VXJediEssentials.lua
+AddonImports\AyijeCDM.lua
+AddonImports\BuffReminders.lua

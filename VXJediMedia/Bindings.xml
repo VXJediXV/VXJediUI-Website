@@ -1,0 +1,24 @@
+<Bindings xmlns="http://www.blizzard.com/wow/ui/">
+    <Binding name="VXJEDIMEDIA_TOGGLEBARS" header="VXJEDIMEDIA" category="VXJediMedia">
+        if InCombatLockdown() then return end
+        if not ElvUI then return end
+        local E = unpack(ElvUI)
+        if not E or not E.db or not E.db.actionbar then return end
+        local bars = { 1, 4, 5, 6 }
+        local hidden = false
+        for _, id in ipairs(bars) do
+            local cfg = E.db.actionbar["bar" .. id]
+            if cfg and cfg.visibility == "hide" then hidden = true break end
+        end
+        local newVis = hidden and "[petbattle]hide;show" or "hide"
+        for _, id in ipairs(bars) do
+            local cfg = E.db.actionbar["bar" .. id]
+            if cfg then
+                cfg.visibility = newVis
+                if E.ActionBars and E.ActionBars.PositionAndSizeBar then
+                    E.ActionBars:PositionAndSizeBar("bar" .. id)
+                end
+            end
+        end
+    </Binding>
+</Bindings>

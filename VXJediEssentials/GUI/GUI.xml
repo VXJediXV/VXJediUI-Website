@@ -1,0 +1,58 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/ ..\FrameXML\UI.xsd">
+
+    <Script file="Main\Core.lua" />
+
+    <Script file="Widgets\WidgetsCompact.lua" />
+    <Script file="Util\FrameChooser.lua" />
+
+    <!-- Widgets -->
+    <Script file="Widgets\PositionCard.lua" />
+    <Script file="Widgets\AEToggle.lua" />
+    <Script file="Widgets\AESlider.lua" />
+    <Script file="Widgets\AEDropdown.lua" />
+    <Script file="Widgets\AEButton.lua" />
+    <Script file="Widgets\AEColorPicker.lua" />
+    <Script file="Widgets\AEEditBox.lua" />
+    <Script file="Widgets\AESeparator.lua" />
+    <Script file="Widgets\Sidebar.lua" />
+    <Script file="Widgets\AEText.lua" />
+
+    <!-- Home Page -->
+    <Script file="Main\HomePage.lua" />
+
+    <!-- Profiles Tab -->
+    <Script file="Tabs\Profiles.lua" />
+
+    <!-- Optimize Tab -->
+    <Script file="Tabs\Optimize.lua" />
+
+    <!-- Combat Tabs -->
+    <Script file="Tabs\Combat\CombatTimer.lua" />
+    <Script file="Tabs\Combat\CombatCross.lua" />
+    <Script file="Tabs\Combat\CombatMessage.lua" />
+    <Script file="Tabs\Combat\CombatRes.lua" />
+    <Script file="Tabs\Combat\StanceText.lua" />
+    <Script file="Tabs\Combat\PetTexts.lua" />
+    <Script file="Tabs\Combat\Gateway.lua" />
+    <Script file="Tabs\Combat\RangeCheck.lua" />
+    <Script file="Tabs\Combat\DispelCursor.lua" />
+    <Script file="Tabs\Combat\TargetCastbar.lua" />
+    <Script file="Tabs\Combat\FocusCastbar.lua" />
+    <Script file="Tabs\Combat\Castbars.lua" />
+    <Script file="Tabs\Combat\HuntersMark.lua" />
+
+    <!-- UI Tabs -->
+    <Script file="Tabs\UI\WorldMap.lua" />
+    <Script file="Tabs\UI\MissingEnchants.lua" />
+    <Script file="Tabs\UI\PositionController.lua" />
+
+    <!-- QoL Tabs -->
+    <Script file="Tabs\QoL\Automation.lua" />
+    <Script file="Tabs\QoL\DragonRiding.lua" />
+    <Script file="Tabs\QoL\CopyAnything.lua" />
+    <Script file="Tabs\QoL\SpellAlerts.lua" />
+    <Script file="Tabs\QoL\CursorCircle.lua" />
+
+    <Script file="Main\MainFrame.lua" />
+</Ui>

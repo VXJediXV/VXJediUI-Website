@@ -1,0 +1,17 @@
+## Interface: 110207, 120000, 120001, 120005
+
+## Title: |cffA855F7VXJedi|r|cffffffffMedia|r
+## Notes: Textures and sounds for VXJediUI » vxjedixv.com.
+## Version: 2.0
+## Author: VXJediXV, Elkano
+## URL: http://vxjedixv.com
+## Category-enUS: |cffA855F7VXJediUI|r
+## IconTexture: Interface\AddOns\VXJediMedia\StatusBars\VXJedi.tga
+## DefaultState: Enable
+## X-Wago-ID: XXXX
+
+Libs\LibStub.lua
+Libs\CallbackHandler-1.0.lua
+Libs\LibSharedMedia-3.0.lua
+
+VXJediMedia.lua

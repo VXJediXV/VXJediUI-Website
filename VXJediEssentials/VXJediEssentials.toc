@@ -1,4 +1,4 @@
-## Interface: 120000, 120001, 120005
+## Interface: 120005, 120001, 120000
 ## Title: |cffA855F7VXJedi|r|cffffffffEssentials|r
 ## Category: |cffA855F7VXJediUI|r
 ## Version: v3

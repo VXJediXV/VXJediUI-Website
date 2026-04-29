@@ -1,4 +1,4 @@
-## Interface: 110207, 120000, 120001, 120005
+## Interface: 120005, 120001, 120000
 
 ## Title: |cffA855F7VXJedi|r|cffffffffMedia|r
 ## Notes: Textures and sounds for VXJediUI » vxjedixv.com.

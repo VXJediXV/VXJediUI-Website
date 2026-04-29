@@ -45,7 +45,7 @@ jobs:
           file_path: VXJediUI.zip
           # ⚠️  Update this to the current WoW version ID from:
           # https://wow.curseforge.com/api/game/versions
-          game_versions: '12.0.1'
+          game_versions: '12.0.5'
           game_endpoint: "wow"
           release_type: release
           changelog: |

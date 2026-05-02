@@ -57,7 +57,6 @@
       font-weight: 400;
       line-height: 1.6;
       overflow-x: hidden;
-      cursor: none;
       transition: background var(--transition-page), color var(--transition-page);
       padding-top: 100px;
     }
@@ -138,7 +137,7 @@
     }
     .banner-link:hover { color: var(--magenta-lt); border-color: var(--magenta-lt); box-shadow: 0 0 10px var(--glow-m); }
     .banner-close {
-      background: none; border: none; cursor: none;
+      background: none; border: none; 
       color: var(--muted); font-size: 1.1rem; line-height: 1;
       padding: 0.1rem 0.3rem; transition: color 0.2s;
     }
@@ -151,12 +150,11 @@
     /* ══════════════════════════════════
        CANVASES
     ══════════════════════════════════ */
-    #waveCanvas, #trailCanvas, #burstCanvas {
+    #waveCanvas, #burstCanvas {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;
     }
     #waveCanvas  { z-index: 0; opacity: var(--wave-opacity); }
-    #trailCanvas { z-index: 9999; }
-    #burstCanvas { z-index: 9998; }
+        #burstCanvas { z-index: 9998; }
     nav, section, .stats, footer, .divider { position: relative; z-index: 1; }
 
     /* ══════════════════════════════════
@@ -199,7 +197,7 @@
       background: linear-gradient(135deg, var(--violet), var(--magenta));
       padding: 0.45rem 0.9rem; border-radius: 2px;
       box-shadow: 0 0 14px var(--glow-v), 0 0 28px rgba(225,29,138,0.12);
-      transition: all 0.2s; cursor: none;
+      transition: all 0.2s; 
     }
     .hero-section-btn:hover {
       box-shadow: 0 0 24px var(--glow-v), 0 0 44px var(--glow-m);
@@ -212,7 +210,7 @@
       margin-top: 3rem;
       font-family: var(--font-display); font-size: 0.55rem; font-weight: 700;
       letter-spacing: 0.14em; text-transform: uppercase;
-      color: var(--muted); text-decoration: none; cursor: none;
+      color: var(--muted); text-decoration: none; 
       border: 1px solid var(--border); padding: 0.4rem 0.85rem; border-radius: 2px;
       transition: all 0.2s;
     }
@@ -240,7 +238,7 @@
       padding: 0.7rem 1.6rem; border-radius: 3px;
       font-family: var(--font-display); font-size: 0.62rem;
       letter-spacing: 0.14em; text-transform: uppercase; font-weight: 700;
-      text-decoration: none; cursor: none; transition: all 0.2s; border: none;
+      text-decoration: none;  transition: all 0.2s; border: none;
     }
     .btn-primary {
       background: linear-gradient(135deg, var(--violet), var(--magenta)); color: #fff;
@@ -393,7 +391,7 @@
     .donate-right { padding: 3.5rem; display: flex; flex-direction: column; gap: 1rem; }
     .donate-right-title { font-family: var(--font-display); font-size: 0.6rem; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 600; color: var(--muted); margin-bottom: 0.5rem; }
     .donate-platforms { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.5rem; }
-    .platform-btn { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1.25rem; border-radius: 3px; text-decoration: none; font-family: var(--font-display); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; transition: all 0.18s; border: 1px solid transparent; cursor: none; }
+    .platform-btn { display: flex; align-items: center; justify-content: space-between; padding: 0.9rem 1.25rem; border-radius: 3px; text-decoration: none; font-family: var(--font-display); font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; transition: all 0.18s; border: 1px solid transparent;  }
     .platform-btn .plabel { display: flex; align-items: center; gap: 0.6rem; }
     .platform-btn .parrow { opacity: 0.5; transition: transform 0.18s, opacity 0.18s; }
     .platform-btn:hover .parrow { transform: translateX(4px); opacity: 1; }
@@ -509,7 +507,7 @@
       aspect-ratio: 16/9;
       background: var(--surface);
       overflow: hidden;
-      cursor: none;
+      
     }
     .screenshot-slot img {
       width: 100%; height: 100%;
@@ -636,7 +634,6 @@
       .divider { margin: 0 1.5rem; }
       .changelog-entry { grid-template-columns: 1fr; }
       .cl-meta { border-right: none; border-bottom: 1px solid var(--border); }
-      body { cursor: auto; }
     }
   </style>
 </head>
@@ -662,7 +659,6 @@
 
 <!-- CANVASES -->
 <canvas id="waveCanvas"></canvas>
-<canvas id="trailCanvas"></canvas>
 <canvas id="burstCanvas"></canvas>
 
 <!-- NAV -->
@@ -1244,82 +1240,6 @@ fetch('https://api.github.com/users/VXJediXV/repos?per_page=100')
   }
   function loop(ts){ x.clearRect(0,0,c.width,c.height); W.forEach(w=>drawW(w,ts)); requestAnimationFrame(loop); }
   requestAnimationFrame(loop);
-})();
-
-/* ══════════════════════
-   CURSOR TRAIL
-══════════════════════ */
-(function(){
-  const c=document.getElementById('trailCanvas');
-  const x=c.getContext('2d');
-  function resize(){ c.width=innerWidth; c.height=innerHeight; }
-  resize(); window.addEventListener('resize',resize);
-
-  let mx=-200, my=-200;
-  document.addEventListener('mousemove', e=>{ mx=e.clientX; my=e.clientY; });
-
-  // Mac-style arrow cursor path (pointing up-left)
-  // Drawn relative to tip at (0,0)
-  function drawCursor(ctx, px, py, scale) {
-    const s = scale || 1;
-    ctx.save();
-    ctx.translate(px, py);
-
-    // Arrow shape points
-    ctx.beginPath();
-    ctx.moveTo(0, 0);           // tip
-    ctx.lineTo(0, 16*s);        // left edge down
-    ctx.lineTo(4*s, 12*s);      // inner notch left
-    ctx.lineTo(7*s, 19*s);      // tail left
-    ctx.lineTo(9.5*s, 18*s);    // tail right
-    ctx.lineTo(6.5*s, 11*s);    // inner notch right
-    ctx.lineTo(11*s, 11*s);     // right edge
-    ctx.closePath();
-
-    // White fill
-    ctx.fillStyle = 'rgba(255,255,255,0.97)';
-    ctx.fill();
-
-    // Gradient outline
-    const grad = ctx.createLinearGradient(0, 0, 11*s, 19*s);
-    grad.addColorStop(0, '#a855f7');
-    grad.addColorStop(0.5, '#e11d8a');
-    grad.addColorStop(1, '#a855f7');
-    ctx.strokeStyle = grad;
-    ctx.lineWidth = 1.5;
-    ctx.lineJoin = 'round';
-    ctx.stroke();
-
-    ctx.restore();
-  }
-
-  // Subtle trail dots
-  const N = 12;
-  const trail = [];
-  let cx = -200, cy = -200;
-  function lerp(a,b,t){return a+(b-a)*t;}
-
-  function tick(){
-    x.clearRect(0,0,c.width,c.height);
-    cx=lerp(cx,mx,0.2); cy=lerp(cy,my,0.2);
-    trail.unshift({x:cx,y:cy});
-    if(trail.length>N) trail.pop();
-
-    // Draw fading trail dots
-    for(let i=trail.length-1;i>0;i--){
-      const r=1-i/trail.length, al=r*0.25, sz=r*3;
-      const t2=i/trail.length;
-      const rr=Math.round(lerp(168,225,t2)),gg=Math.round(lerp(85,29,t2)),bb=Math.round(lerp(247,138,t2));
-      x.beginPath(); x.arc(trail[i].x+5,trail[i].y+5,sz,0,Math.PI*2);
-      x.fillStyle=`rgba(${rr},${gg},${bb},${al})`; x.fill();
-    }
-
-    // Draw main cursor
-    drawCursor(x, cx, cy, 1.1);
-
-    requestAnimationFrame(tick);
-  }
-  tick();
 })();
 
 /* ══════════════════════
